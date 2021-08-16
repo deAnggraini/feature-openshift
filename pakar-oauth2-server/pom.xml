@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>id.co.bca.pakar.be.oauth2</groupId>
-	<artifactId>pakar-oauth2-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>pakar-oauth2-server</name>
+	<artifactId>pakar-oauth-server</artifactId>
+	<version>1.0</version>
+	<name>pakar-oauth-server</name>
 	<description>PAKAR AUTHORIZATION SERVER USING OAUTH2 AND SPRING BOOT 2.5.0</description>
 
 	<properties>
@@ -28,8 +28,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency> <groupId>org.bouncycastle</groupId> <artifactId>bcpkix-jdk15on</artifactId> 
-			<version>1.58</version> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -43,26 +41,30 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<!--
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-logging</artifactId>
 				</exclusion>
 			</exclusions>
+			-->
 		</dependency>
 		<!-- log4j2 logger -->
+		<!-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
+		-->
 		<!-- need by log4j2 -->
 		<!--
 			jackson data format needed by log4j2
 		 -->
-		<dependency>
+		<!-- <dependency>
 	        <groupId>com.fasterxml.jackson.dataformat</groupId>
 	        <artifactId>jackson-dataformat-yaml</artifactId>
-	    </dependency>
+	    </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -95,6 +97,11 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
+		<!-- bean validation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -120,16 +127,16 @@
 	<build>
 		<finalName>pakar-oauth-server</finalName>
 		<resources>
-			<resource>
+			<!--<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
-				<excludes>
+				<excludes> -->
 					<!-- <exclude>log4j2.xml</exclude> -->
-					<exclude>log4j2-spring.xml</exclude>
+					<!--<exclude>log4j2-spring.xml</exclude>
 					<exclude>application.yml</exclude>
 					<exclude>script/*.*</exclude>
 				</excludes>
-			</resource>
+			</resource>-->
 		</resources>
 		<plugins>
 			<plugin>
@@ -151,6 +158,87 @@
 	            <directory>${dir}</directory>
 	        </build>
 	    </profile>
+	    <profile>
+			<id>kubernetes</id>
+			<build>
+				<finalName>pakar-oauth2-server</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.jkube</groupId>
+						<artifactId>kubernetes-maven-plugin</artifactId>
+						<version>1.0.0</version>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>openshift</id>
+			<build>
+				<finalName>pakar-oauth-server</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.jkube</groupId>
+						<artifactId>openshift-maven-plugin</artifactId>
+						<version>1.0.0</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>resource</goal>
+									<goal>build</goal>
+									<goal>apply</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
+
+	<repositories>
+		<repository>
+			<id>redhat-ga-repository</id>
+			<url>https://maven.repository.redhat.com/ga</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>redhat-ea-repository</id>
+			<url>https://maven.repository.redhat.com/earlyaccess/all</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>redhat-ga-repository</id>
+			<url>https://maven.repository.redhat.com/ga</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>redhat-ea-repository</id>
+			<url>https://maven.repository.redhat.com/earlyaccess/all</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 </project>
