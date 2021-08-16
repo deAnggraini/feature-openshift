@@ -1,39 +1,14 @@
 server:
-  port: ${port:8081}
+  port: 13081
 spring:
   rest:
     timeout:
       read: 60000
       connection: 60000
-  eai:
-    ad:
-      loginUri: http://192.168.100.48:12085/ad-gateways/verify1
-      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
-      applicationID: PRJ1
-      key: 123456789013245678901234
-  security:
-    oauth2:
-      server: 
-        url: http://127.0.0.1:12081/oauth/token
-      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
-      clientSecret: da82edc6dcc1af30
-      authorize-grant-type: password,refresh_token
-      accessTokenValiditySeconds: 43200
-      refreshTokenValiditySeconds: 2592000
-    jwt:
-      signingkey: pakar123
-  dataSource: 
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.100.48:5432/postgres
-    #url: jdbc:postgresql://36.89.25.220:5432/pakardb
-    username: postgres
-    password: password
-    hikari:
-      connectionTimeout: 20000
-      maximumPoolSize: 5   
-#    
-#
-## Hibernate ddl auto (create, create-drop, update)
+  profiles:
+    active: "dev-ogya"
+  main:
+    banner-mode: "off"
   jpa:
     hibernate:
       ddl-auto: update
@@ -42,4 +17,36 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     properties:
       hibernate:
-        dialect:org.hibernate.dialect.PostgreSQL10Dialect   
+        dialect:org.hibernate.dialect.PostgreSQL10Dialect
+  login:
+    max-failed-login: 5
+    locking-time-failed-login: 30
+---
+spring:
+  profiles: dev-local
+  eai:
+    ad:
+      loginUri: http://192.168.181.70:13085/ad-gateways/verify1
+      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
+      applicationID: PRJ1
+      key: 123456789013245678901234
+  security:
+    oauth2:
+      server:
+        #        url: http://192.168.181.70:${port:8081}/oauth/token
+        url: http://192.168.181.70:${port:13081}
+      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
+      clientSecret: da82edc6dcc1af30
+      authorize-grant-type: password,refresh_token
+      accessTokenValiditySeconds: 43200
+      refreshTokenValiditySeconds: 2592000
+    jwt:
+      signingkey: pakar123
+  dataSource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.181.95:5432/pakardb3
+    username: pakar3
+    password: pakar123
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
